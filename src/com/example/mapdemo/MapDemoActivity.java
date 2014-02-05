@@ -35,13 +35,22 @@ public class MapDemoActivity extends FragmentActivity implements
 	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_demo_activity);
 		mLocationClient = new LocationClient(this, this, this);
 		mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
-		map = mapFragment.getMap();
-		map.setMyLocationEnabled(true);
+		if (mapFragment != null) {
+			map = mapFragment.getMap();
+			if (map != null) {
+				Toast.makeText(this, "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
+				map.setMyLocationEnabled(true);
+			} else {
+				Toast.makeText(this, "Error - Map was null!!", Toast.LENGTH_SHORT).show();
+			}
+		} else {
+			Toast.makeText(this, "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
+		}
 
 	}
 
@@ -122,14 +131,14 @@ public class MapDemoActivity extends FragmentActivity implements
 	@Override
 	public void onConnected(Bundle dataBundle) {
 		// Display the connection status
-		Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
 		Location location = mLocationClient.getLastLocation();
 		if (location != null) {
+			Toast.makeText(this, "GPS location was found!", Toast.LENGTH_SHORT).show();
 			LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 			CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
 			map.animateCamera(cameraUpdate);
 		} else {
-			Toast.makeText(this, "Current location was null!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Current location was null, enable GPS on emulator!", Toast.LENGTH_SHORT).show();
 		}
 	}
 
