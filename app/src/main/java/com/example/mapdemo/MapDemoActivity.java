@@ -12,9 +12,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,12 +22,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 public class MapDemoActivity extends FragmentActivity implements
-		GooglePlayServicesClient.ConnectionCallbacks,
-		GooglePlayServicesClient.OnConnectionFailedListener {
+		GoogleApiClient.ConnectionCallbacks,
+		GoogleApiClient.OnConnectionFailedListener {
 
 	private SupportMapFragment mapFragment;
 	private GoogleMap map;
-	private LocationClient mLocationClient;
+    private GoogleApiClient mGoogleApiClient;
 	/*
 	 * Define a request code to send to Google Play services This code is
 	 * returned in Activity.onActivityResult
@@ -38,7 +38,11 @@ public class MapDemoActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_demo_activity);
-		mLocationClient = new LocationClient(this, this, this);
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this).build();
+
 		mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
 		if (mapFragment != null) {
 			map = mapFragment.getMap();
@@ -62,7 +66,7 @@ public class MapDemoActivity extends FragmentActivity implements
 		super.onStart();
 		// Connect the client.
 		if (isGooglePlayServicesAvailable()) {
-			mLocationClient.connect();
+			mGoogleApiClient.connect();
 		}
 
 	}
@@ -73,7 +77,7 @@ public class MapDemoActivity extends FragmentActivity implements
 	@Override
 	protected void onStop() {
 		// Disconnecting the client invalidates it.
-		mLocationClient.disconnect();
+		mGoogleApiClient.disconnect();
 		super.onStop();
 	}
 
@@ -91,7 +95,7 @@ public class MapDemoActivity extends FragmentActivity implements
 			 */
 			switch (resultCode) {
 			case Activity.RESULT_OK:
-				mLocationClient.connect();
+				mGoogleApiClient.connect();
 				break;
 			}
 
@@ -131,7 +135,7 @@ public class MapDemoActivity extends FragmentActivity implements
 	@Override
 	public void onConnected(Bundle dataBundle) {
 		// Display the connection status
-		Location location = mLocationClient.getLastLocation();
+		Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 		if (location != null) {
 			Toast.makeText(this, "GPS location was found!", Toast.LENGTH_SHORT).show();
 			LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -142,15 +146,18 @@ public class MapDemoActivity extends FragmentActivity implements
 		}
 	}
 
-	/*
-	 * Called by Location Services if the connection to the location client
-	 * drops because of an error.
-	 */
-	@Override
-	public void onDisconnected() {
-		// Display the connection status
-		Toast.makeText(this, "Disconnected. Please re-connect.", Toast.LENGTH_SHORT).show();
-	}
+    /*
+     * Called by Location Services if the connection to the location client
+     * drops because of an error.
+     */
+    @Override
+    public void onConnectionSuspended(int i) {
+        if (i == CAUSE_SERVICE_DISCONNECTED) {
+            Toast.makeText(this, "Disconnected. Please re-connect.", Toast.LENGTH_SHORT).show();
+        } else if (i == CAUSE_NETWORK_LOST) {
+            Toast.makeText(this, "Network lost. Please re-connect.", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 	/*
 	 * Called by Location Services if the attempt to Location Services fails.
