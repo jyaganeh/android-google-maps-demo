@@ -20,6 +20,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -33,7 +34,7 @@ public class MapDemoActivity extends FragmentActivity implements
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private long UPDATE_INTERVAL = 60000;  /* 60 secs */
-    private long FASTEST_INTERVAL = 15000; /* 15 secs */
+    private long FASTEST_INTERVAL = 5000; /* 5 secs */
 
 	/*
 	 * Define a request code to send to Google Play services This code is
@@ -45,46 +46,64 @@ public class MapDemoActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_demo_activity);
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this).build();
 
 		mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
 		if (mapFragment != null) {
-			map = mapFragment.getMap();
-			if (map != null) {
-				Toast.makeText(this, "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
-				map.setMyLocationEnabled(true);
-			} else {
-				Toast.makeText(this, "Error - Map was null!!", Toast.LENGTH_SHORT).show();
-			}
+			mapFragment.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap map) {
+                    loadMap(map);
+                }
+            });
 		} else {
 			Toast.makeText(this, "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
 		}
 
 	}
 
-	/*
-	 * Called when the Activity becomes visible.
-	 */
-	@Override
-	protected void onStart() {
-		super.onStart();
-		// Connect the client.
-		if (isGooglePlayServicesAvailable()) {
-			mGoogleApiClient.connect();
-		}
+    protected void loadMap(GoogleMap googleMap) {
+        map = googleMap;
+        if (map != null) {
+            Toast.makeText(this, "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
+            map.setMyLocationEnabled(true);
 
-	}
+            // Now that map has loaded, let's get our location!
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(LocationServices.API)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this).build();
 
-	/*
+            connectClient();
+        } else {
+            Toast.makeText(this, "Error - Map was null!!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    protected void connectClient() {
+        // Connect the client.
+        if (isGooglePlayServicesAvailable() && mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    /*
+     * Called when the Activity becomes visible.
+    */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        connectClient();
+    }
+
+    /*
 	 * Called when the Activity is no longer visible.
 	 */
 	@Override
 	protected void onStop() {
 		// Disconnecting the client invalidates it.
-		mGoogleApiClient.disconnect();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
+        }
 		super.onStop();
 	}
 
