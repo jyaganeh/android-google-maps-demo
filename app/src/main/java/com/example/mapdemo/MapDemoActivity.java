@@ -27,14 +27,14 @@ import com.google.android.gms.maps.model.LatLng;
 public class MapDemoActivity extends FragmentActivity implements
 		GoogleApiClient.ConnectionCallbacks,
 		GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+		LocationListener {
 
 	private SupportMapFragment mapFragment;
 	private GoogleMap map;
-    private GoogleApiClient mGoogleApiClient;
-    private LocationRequest mLocationRequest;
-    private long UPDATE_INTERVAL = 60000;  /* 60 secs */
-    private long FASTEST_INTERVAL = 5000; /* 5 secs */
+	private GoogleApiClient mGoogleApiClient;
+	private LocationRequest mLocationRequest;
+	private long UPDATE_INTERVAL = 60000;  /* 60 secs */
+	private long FASTEST_INTERVAL = 5000; /* 5 secs */
 
 	/*
 	 * Define a request code to send to Google Play services This code is
@@ -64,6 +64,7 @@ public class MapDemoActivity extends FragmentActivity implements
     protected void loadMap(GoogleMap googleMap) {
         map = googleMap;
         if (map != null) {
+            // Map is ready
             Toast.makeText(this, "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
             map.setMyLocationEnabled(true);
 
