@@ -48,7 +48,7 @@ public class MapDemoActivity extends AppCompatActivity implements
 	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) { 
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_demo_activity);
 
@@ -83,6 +83,7 @@ public class MapDemoActivity extends AppCompatActivity implements
 		MapDemoActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
 	}
 
+	@SuppressWarnings("all")
 	@NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
 	void getMyLocation() {
 		if (map != null) {
