@@ -8,7 +8,6 @@
         android:minSdkVersion="11"
         android:targetSdkVersion="18" />
 
-    <permission android:name="com.example.mapdemo.permission.MAPS_RECEIVE" android:protectionLevel="signature"/>
     <permission android:name="android.permission.ACCESS_FINE_LOCATION" android:protectionLevel="dangerous"/>
     <permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:protectionLevel="dangerous"/>
 
