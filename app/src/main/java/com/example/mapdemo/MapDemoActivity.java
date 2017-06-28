@@ -98,10 +98,10 @@ public class MapDemoActivity extends AppCompatActivity {
         MapDemoActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
-    @SuppressWarnings("all")
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     void getMyLocation() {
         FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
+        //noinspection MissingPermission
         locationClient.getLastLocation()
                 .addOnCompleteListener(this, new OnCompleteListener<Location>() {
                     @Override
