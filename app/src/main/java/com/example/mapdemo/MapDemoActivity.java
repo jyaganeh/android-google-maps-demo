@@ -100,6 +100,9 @@ public class MapDemoActivity extends AppCompatActivity {
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     void getMyLocation() {
+        //noinspection MissingPermission
+        map.setMyLocationEnabled(true);
+
         FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
         //noinspection MissingPermission
         locationClient.getLastLocation()
@@ -214,9 +217,6 @@ public class MapDemoActivity extends AppCompatActivity {
                 Double.toString(location.getLatitude()) + "," +
                 Double.toString(location.getLongitude());
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-
-        //noinspection MissingPermission
-        map.setMyLocationEnabled(true);
     }
 
     public void onSaveInstanceState(Bundle savedInstanceState) {
