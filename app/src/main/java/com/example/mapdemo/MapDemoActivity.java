@@ -25,8 +25,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -100,17 +100,25 @@ public class MapDemoActivity extends AppCompatActivity {
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     void getMyLocation() {
+        //noinspection MissingPermission
+        map.setMyLocationEnabled(true);
+
         FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
         //noinspection MissingPermission
         locationClient.getLastLocation()
-                .addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                .addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            onLocationChanged(task.getResult());
-                        } else {
-                            Log.d("MapDemoActivity", "Error");
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            onLocationChanged(location);
                         }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("MapDemoActivity", "Error trying to get last GPS location");
+                        e.printStackTrace();
                     }
                 });
     }
@@ -197,15 +205,18 @@ public class MapDemoActivity extends AppCompatActivity {
     }
 
     public void onLocationChanged(Location location) {
+        // GPS may be turned off
+        if (location == null) {
+            return;
+        }
+
         // Report to the UI that the location was updated
+
         mCurrentLocation = location;
         String msg = "Updated Location: " +
                 Double.toString(location.getLatitude()) + "," +
                 Double.toString(location.getLongitude());
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-
-        //noinspection MissingPermission
-        map.setMyLocationEnabled(true);
     }
 
     public void onSaveInstanceState(Bundle savedInstanceState) {
