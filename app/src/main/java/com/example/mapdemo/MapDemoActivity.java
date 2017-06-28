@@ -202,7 +202,13 @@ public class MapDemoActivity extends AppCompatActivity {
     }
 
     public void onLocationChanged(Location location) {
+        // GPS may be turned off
+        if (location == null) {
+            return;
+        }
+
         // Report to the UI that the location was updated
+
         mCurrentLocation = location;
         String msg = "Updated Location: " +
                 Double.toString(location.getLatitude()) + "," +
