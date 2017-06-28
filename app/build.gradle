@@ -18,12 +18,10 @@ android {
     }
 }
 
-apply plugin: 'android-apt'
-
 dependencies {
-    compile 'com.android.support:appcompat-v7:25.1.1'
-    compile 'com.google.android.gms:play-services-maps:9.8.0'
-    compile 'com.google.android.gms:play-services-location:9.8.0'
-    compile 'com.github.hotchemi:permissionsdispatcher:2.2.0'
-    apt 'com.github.hotchemi:permissionsdispatcher-processor:2.2.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.google.android.gms:play-services-maps:11.0.1'
+    compile 'com.google.android.gms:play-services-location:11.0.1'
+    compile 'com.github.hotchemi:permissionsdispatcher:2.4.0'
+    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.4.0'
 }
