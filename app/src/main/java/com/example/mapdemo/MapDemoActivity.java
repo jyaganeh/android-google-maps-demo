@@ -25,8 +25,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -103,14 +103,19 @@ public class MapDemoActivity extends AppCompatActivity {
         FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
         //noinspection MissingPermission
         locationClient.getLastLocation()
-                .addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                .addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            onLocationChanged(task.getResult());
-                        } else {
-                            Log.d("MapDemoActivity", "Error");
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            onLocationChanged(location);
                         }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("MapDemoActivity", "Error trying to get last GPS location");
+                        e.printStackTrace();
                     }
                 });
     }
