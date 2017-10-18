@@ -85,8 +85,8 @@ public class MapDemoActivity extends AppCompatActivity {
         if (map != null) {
             // Map is ready
             Toast.makeText(this, "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
-            MapDemoActivityPermissionsDispatcher.getMyLocationWithCheck(this);
-            MapDemoActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
+            MapDemoActivityPermissionsDispatcher.getMyLocationWithPermissionCheck(this);
+            MapDemoActivityPermissionsDispatcher.startLocationUpdatesWithPermissionCheck(this);
         } else {
             Toast.makeText(this, "Error - Map was null!!", Toast.LENGTH_SHORT).show();
         }
@@ -178,7 +178,7 @@ public class MapDemoActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Current location was null, enable GPS on emulator!", Toast.LENGTH_SHORT).show();
         }
-        MapDemoActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
+        MapDemoActivityPermissionsDispatcher.startLocationUpdatesWithPermissionCheck(this);
     }
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
