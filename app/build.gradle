@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         applicationId "com.example.mapdemo"
         minSdkVersion 18
-        targetSdkVersion 26
+        targetSdkVersion 27
     }
 
     buildTypes {
@@ -18,10 +18,17 @@ android {
     }
 }
 
+ext {
+    permissionDispatcherVersion = "3.2.0"
+    supportLibVersion = "27.1.1"
+    googlePlayVersion = "15.0.0"
+}
+
 dependencies {
-    compile 'com.android.support:appcompat-v7:26.0.1'
-    compile 'com.google.android.gms:play-services-maps:11.4.2'
-    compile 'com.google.android.gms:play-services-location:11.4.2'
-    compile 'com.github.hotchemi:permissionsdispatcher:3.0.1'
-    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:3.0.1'
+    implementation "com.android.support:appcompat-v7:$supportLibVersion"
+    implementation "com.android.support:support-v13:$supportLibVersion" // to remove lint error, found in .idea/libraries
+    implementation "com.google.android.gms:play-services-maps:$googlePlayVersion"
+    implementation "com.google.android.gms:play-services-location:$googlePlayVersion"
+    implementation "com.github.hotchemi:permissionsdispatcher:$permissionDispatcherVersion"
+    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$permissionDispatcherVersion"
 }
