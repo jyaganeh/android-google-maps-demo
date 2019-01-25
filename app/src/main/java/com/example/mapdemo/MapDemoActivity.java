@@ -1,5 +1,6 @@
 package com.example.mapdemo;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.location.Location;
 import android.os.Bundle;
