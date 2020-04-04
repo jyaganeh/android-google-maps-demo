@@ -5,11 +5,13 @@ import android.app.Dialog;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -103,6 +105,7 @@ public class MapDemoActivity extends AppCompatActivity {
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     void getMyLocation() {
         map.setMyLocationEnabled(true);
+        map.getUiSettings().setMyLocationButtonEnabled(true);
 
         FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
         locationClient.getLastLocation()
@@ -225,7 +228,7 @@ public class MapDemoActivity extends AppCompatActivity {
     }
 
     // Define a DialogFragment that displays the error dialog
-    public static class ErrorDialogFragment extends android.support.v4.app.DialogFragment {
+    public static class ErrorDialogFragment extends DialogFragment {
 
         // Global field to contain the error dialog
         private Dialog mDialog;
