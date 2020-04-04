@@ -18,16 +18,15 @@ android {
 }
 
 ext {
-    permissionDispatcherVersion = "3.2.0"
-    supportLibVersion = "28.0.0"
-    googlePlayVersion = "15.0.0"
+    permissionDispatcherVersion = "4.7.0"
+    supportLibVersion = "1.0.0"
+    googlePlayVersion = "17.0.0"
 }
 
 dependencies {
-    implementation "com.android.support:appcompat-v7:$supportLibVersion"
-    implementation "com.android.support:support-v13:$supportLibVersion" // to remove lint error, found in .idea/libraries
+    implementation "androidx.appcompat:appcompat:1.1.0"
     implementation "com.google.android.gms:play-services-maps:$googlePlayVersion"
     implementation "com.google.android.gms:play-services-location:$googlePlayVersion"
-    implementation "com.github.hotchemi:permissionsdispatcher:$permissionDispatcherVersion"
-    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$permissionDispatcherVersion"
+    implementation "org.permissionsdispatcher:permissionsdispatcher:$permissionDispatcherVersion"
+    annotationProcessor "org.permissionsdispatcher:permissionsdispatcher-processor:$permissionDispatcherVersion"
 }
