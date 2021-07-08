@@ -171,8 +171,12 @@ public class MapDemoActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        // Display the connection status
+        displayLocation();
 
+        MapDemoActivityPermissionsDispatcher.startLocationUpdatesWithPermissionCheck(this);
+    }
+
+    private void displayLocation() {
         if (mCurrentLocation != null) {
             Toast.makeText(this, "GPS location was found!", Toast.LENGTH_SHORT).show();
             LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
@@ -181,7 +185,6 @@ public class MapDemoActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Current location was null, enable GPS on emulator!", Toast.LENGTH_SHORT).show();
         }
-        MapDemoActivityPermissionsDispatcher.startLocationUpdatesWithPermissionCheck(this);
     }
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
@@ -213,13 +216,12 @@ public class MapDemoActivity extends AppCompatActivity {
             return;
         }
 
-        // Report to the UI that the location was updated
-
         mCurrentLocation = location;
         String msg = "Updated Location: " +
                 Double.toString(location.getLatitude()) + "," +
                 Double.toString(location.getLongitude());
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        displayLocation();
     }
 
     public void onSaveInstanceState(Bundle savedInstanceState) {
